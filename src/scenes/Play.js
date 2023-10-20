@@ -49,4 +49,6 @@ this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 +
 
 }
 
+//starfield doesn't scroll, no spaceships are created and the player can't move
+
 
