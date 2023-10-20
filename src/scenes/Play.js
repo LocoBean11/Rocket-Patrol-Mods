@@ -51,12 +51,15 @@ class Play extends Phaser.Scene {
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
+            this.ship03.reset();
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
+            this.ship02.reset();
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
+            this.ship01.reset();
         }
       }
 
@@ -66,9 +69,9 @@ class Play extends Phaser.Scene {
           rocket.x + rocket.width > ship.x && 
           rocket.y < ship.y + ship.height &&
           rocket.height + rocket.y > ship. y) {
-          return true;
+            return true;
         } else {
-          return false;
+            return false;
         }
       }
 
