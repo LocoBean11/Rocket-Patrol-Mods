@@ -9,7 +9,7 @@ class Play extends Phaser.Scene {
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
         //load spritesheet
-        //this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
     create() {
@@ -64,33 +64,61 @@ class Play extends Phaser.Scene {
         bottom: 5,
         },
         fixedWidth: 100
-        }
+      }
+      this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+    
+        // Game Over flag
+        this.gameOver = false;
 
-  this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-    }
-
+         // 60-second play clock
+         scoreConfig.fixedWidth = 0;
+         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
+             this.gameOver = true;
+         }, null, this);
+     }
+ 
         update() {
-        this.starfield.tilePositionX -= 4;
-        this.p1Rocket.update();
-         // update spaceships (x3)
-        this.ship01.update();         
-        this.ship02.update();
-        this.ship03.update();
+          // check key input for restart / menu
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+              this.scene.restart();
+          }
+
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+              this.scene.start("menuScene");
+          }
+
+        this.starfield.tilePositionX -= 4;  // update the tile sprite
+
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+          this.scene.restart();
+      }
+
+      if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+          this.scene.start("menuScene");
+      }
+
+      this.starfield.tilePositionX -= 4;  // update tile sprite
+
+      if(!this.gameOver) {
+          this.p1Rocket.update();             // update p1
+           this.ship01.update();               // update spaceship (x3)
+          this.ship02.update();
+          this.ship03.update();
+      }
 
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
-            this.ship03.reset();
             this.shipExplode(this.ship03);
         }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
+        if(this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
-            this.ship02.reset();
             this.shipExplode(this.ship02);
         }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
+        if(this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
-            this.ship01.reset();
             this.shipExplode(this.ship01);
         }
       }
@@ -104,11 +132,11 @@ class Play extends Phaser.Scene {
             return true;
         } else {
             return false;
-        }
+          }
       }
 
       shipExplode(ship) {
-        // temporarily hide ship
+        // temporarily hides ship
         ship.alpha = 0;
         // create explosion sprite at ship's position
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
@@ -121,8 +149,7 @@ class Play extends Phaser.Scene {
         //score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-      }
 
-}
-
-//starfield doesn't scroll, no spaceships are created and the player can't move
+        this.sound.play('sfx_explosion');
+        }
+    }
