@@ -23,6 +23,19 @@ class Rocket extends Phaser.GameObjects.Sprite {
             if(Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring) {
                 this.isFiring = true;
                 this.sfxRocket.play();
+                // display fire when fire button is pressed
+        let fireConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'center',
+            padding: {
+            top: 5,
+            bottom: 5,
+            },
+            fixedWidth: 100
+          }
             }
 
             //if fire, move up
