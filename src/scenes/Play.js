@@ -31,7 +31,15 @@ class Play extends Phaser.Scene {
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
-  
+
+        // Set a timer to increase spaceship speed after 30 seconds
+        this.time.addEvent({
+          delay: 30000, // 30 seconds in milliseconds
+          callback: this.increaseSpaceshipSpeed,
+          callbackScope: this,
+          loop: false // Do not repeat the timer
+      });
+
         //define keys
          keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
          keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -49,6 +57,13 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
 
+        /*increaseSpaceshipSpeed() {
+          // Increases the speed of the spaceships
+          this.ship01.increaseSpeed(10);
+          this.ship02.increaseSpeed(10);
+          this.ship03.increaseSpeed(10);
+          }*/
+
         // initialize score
         this.p1Score = 0;
 
@@ -65,11 +80,12 @@ class Play extends Phaser.Scene {
         },
         fixedWidth: 100
       }
+
       this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-    
+
         // Game Over flag
         this.gameOver = false;
-
+ 
          // 60-second play clock
          scoreConfig.fixedWidth = 0;
          this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
@@ -77,9 +93,42 @@ class Play extends Phaser.Scene {
              this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
              this.gameOver = true;
          }, null, this);
-     }
- 
+      }
+    
         update() {
+          //display "Fire" when button is pressed
+          
+       if(this.p1Rocket.y < game.config.height - borderUISize - borderPadding) {
+        let fireButtonConfig = {
+         fontFamily: 'Courier',
+         fontSize: '28px',
+         backgroundColor: '#F3B141',
+         color: '#843605',
+         align: 'center',
+         padding: {
+         top: 5,
+         bottom: 5,
+         },
+         fixedWidth: 100
+       }
+       this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, "FIRE", fireButtonConfig).setOrigin(-2.5,0);
+      }
+      else{
+        let nofireButtonConfig = {
+          fontFamily: 'Courier',
+          fontSize: '28px',
+          backgroundColor: '#00ff00',
+          color: '0x00FF00',
+          align: 'center',
+          padding: {
+          top: 5,
+          bottom: 5,
+          },
+          fixedWidth: 100
+        }
+        this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, "", nofireButtonConfig).setOrigin(-2.5,0);
+      }
+
           // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
               this.scene.restart();
@@ -134,7 +183,7 @@ class Play extends Phaser.Scene {
             return false;
           }
       }
-
+    
       shipExplode(ship) {
         // temporarily hides ship
         ship.alpha = 0;

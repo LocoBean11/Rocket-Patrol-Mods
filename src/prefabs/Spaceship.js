@@ -16,8 +16,22 @@ class Spaceship extends Phaser.GameObjects.Sprite {
         }    
     }
 
+    increaseSpeed(amount) {
+        // Increase the speed by the specified amount
+        this.speed += amount;
+    }
+
     //position reset
     reset() {
         this.x = game.config.width;
     }
 }
+
+  // Speed increase after 30 seconds
+      /*this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+        this.moveSpeed = game.settings.spaceshipSpeed*2;
+          this.ship01 = true;
+          this.ship02 = true;
+          this.ship03 = true;
+      }, null, this);
+    }*/

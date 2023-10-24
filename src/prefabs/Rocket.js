@@ -9,6 +9,10 @@ class Rocket extends Phaser.GameObjects.Sprite {
       this.moveSpeed = 2;    //pixels per frame
       this.sfxRocket = scene.sound.add('sfx_rocket')  // adds the rocket sfx
     }
+    
+    get firing(){
+        return this.isFiring;
+    }
 
     update() {
         //left and right movement
@@ -22,20 +26,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
             //fire button
             if(Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring) {
                 this.isFiring = true;
-                this.sfxRocket.play();
-                // display fire when fire button is pressed
-        let fireConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'center',
-            padding: {
-            top: 5,
-            bottom: 5,
-            },
-            fixedWidth: 100
-          }
+                this.sfxRocket.play(); 
             }
 
             //if fire, move up
