@@ -4,7 +4,7 @@
 //Mods chosen: Fire UI (1 pt), looping background music (1 pt), speed increase (1 pt),
 //time remaining (3 pts), new title screen (3 pts), 
 //new enemy spaceshup type (5), 
-//CITATION: "Chiptune No Copyright Music | No Copyright | No Attribution - Loopable" by Liborio Conti
+//CITATION: "Chiptune No Copyright Music | No Copyright | No Attribution - Loopable" by Liborio Conti @ YouTube
 
 let config = {
     type: Phaser.CANVAS,
