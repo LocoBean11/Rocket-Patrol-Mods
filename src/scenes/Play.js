@@ -7,12 +7,32 @@ class Play extends Phaser.Scene {
         //load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('smallerspaceship', './assets/smallerspaceship.png');
         this.load.image('starfield', './assets/starfield.png');
         //load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
     create() {
+      //this.text.setText(`Event.progress: ${this.timedEvent.getProgress().toString().substr(0, 4)}`);
+
+    /*  this.remainingTime = game.settings.gameTimer / 1000; // Set the initial remaining time in seconds
+
+      // Create a text element to display the remaining time
+      this.remainingTimeText = this.add.text(
+          16, // X position
+          16, // Y position
+          'Time: ' + this.remainingTime, // Initial text
+          {
+              fontFamily: 'Courier',
+              fontSize: '24px',
+              color: '#ffffff',
+          }
+      );
+      */
+
+      this.extraTime = 5;
+
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
@@ -27,18 +47,12 @@ class Play extends Phaser.Scene {
         //add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
-         //add spaceships (x3)
+         //add spaceships (x4)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
-
-        // Set a timer to increase spaceship speed after 30 seconds
-        this.time.addEvent({
-          delay: 30000, // 30 seconds in milliseconds
-          callback: this.increaseSpaceshipSpeed,
-          callbackScope: this,
-          loop: false // Do not repeat the timer
-      });
+        this.ship04 = new Spaceship(this, game.config.width, borderUISize*8 + borderPadding*4, 'smallerspaceship', 0, 50).setOrigin(0,0);
+        this.ship04.increaseSpeed(3);
 
         //define keys
          keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -56,14 +70,7 @@ class Play extends Phaser.Scene {
             }),
             frameRate: 30
         });
-
-        /*increaseSpaceshipSpeed() {
-          // Increases the speed of the spaceships
-          this.ship01.increaseSpeed(10);
-          this.ship02.increaseSpeed(10);
-          this.ship03.increaseSpeed(10);
-          }*/
-
+        
         // initialize score
         this.p1Score = 0;
 
@@ -80,7 +87,7 @@ class Play extends Phaser.Scene {
         },
         fixedWidth: 100
       }
-
+      
       this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
 
         // Game Over flag
@@ -93,11 +100,57 @@ class Play extends Phaser.Scene {
              this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
              this.gameOver = true;
          }, null, this);
+
+         // Set a timer to increase spaceship speed after 30 seconds
+        this.time.addEvent({
+          delay: 30000, // 30 seconds in milliseconds
+          callback: this.increaseSpaceshipSpeed,
+          callbackScope: this,
+          loop: false // Do not repeat the timer
+        });
+      }
+
+      increaseSpaceshipSpeed() {
+        // Increases the speed of the spaceships
+        this.ship01.increaseSpeed(2);
+        this.ship02.increaseSpeed(2);
+        this.ship03.increaseSpeed(2);
+        this.ship04.increaseSpeed(3);
       }
     
         update() {
+          //Display the remaining time
+          let timeConfig = {
+              fontFamily: 'Courier',
+              fontSize: '28px',
+              backgroundColor: '#F3B141',
+              color: '#843605',
+              align: 'center',
+              padding: {
+              top: 5,
+              bottom: 5,
+              },
+              fixedWidth: 100
+            }
+          this.add.text(game.config.width/2, game.config.height/2, `${this.clock.getRemainingSeconds()}`.toString(), timeConfig).setOrigin(-1.5,5);
+
+         /* if (!this.gameOver) {
+            // Update the remaining time
+            this.remainingTime = Math.max(0, this.remainingTime - this.time.deltaTime / 1000); // Subtract elapsed time in seconds
+    
+            // Update the displayed text
+            this.remainingTimeText.setText('Time: ' + Math.ceil(this.remainingTime));
+    
+            // Check for game over when the time runs out
+            if (this.remainingTime <= 0) {
+                this.gameOver = true;
+    
+                // Handle game over logic here
+                // For example: this.scene.start("gameOverScene");
+            }
+        }
+*/
           //display "Fire" when button is pressed
-          
        if(this.p1Rocket.y < game.config.height - borderUISize - borderPadding) {
         let fireButtonConfig = {
          fontFamily: 'Courier',
@@ -151,24 +204,46 @@ class Play extends Phaser.Scene {
       this.starfield.tilePositionX -= 4;  // update tile sprite
 
       if(!this.gameOver) {
-          this.p1Rocket.update();             // update p1
-           this.ship01.update();               // update spaceship (x3)
+          this.p1Rocket.update();  // update p1 and spaceships (x3)
+           this.ship01.update();  
           this.ship02.update();
           this.ship03.update();
+          this.ship04.update();
       }
 
         // check collisions
+        if(this.checkCollision(this.p1Rocket, this.ship04)) {
+          this.p1Rocket.reset();
+          this.shipExplode(this.ship04);
+          //Add time for destroyed spaceship
+          this.timeRemaining = 60000 * (1 - this.timedEvent.getProgress());
+          this.newTime = this.timeRemaining + 5000;
+          this.clock = this.time.delayedCall(this.newTime, () => {
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
+            this.gameOver = true;
+        }, null, this);
+
+          /*this.time.delayedCall(extraTime * 1000, () => {
+          }, [], this);*/
+      }
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
+            /*this.time.delayedCall(extraTime * 1000, () => {
+            }, [], this);*/
         }
         if(this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
+           /* this.time.delayedCall(extraTime * 1000, () => {
+            }, [], this);*/
         }
         if(this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+           /* this.time.delayedCall(extraTime * 1000, () => {
+            }, [], this);*/
         }
       }
 
@@ -195,9 +270,21 @@ class Play extends Phaser.Scene {
           ship.alpha = 1;                       // make ship visible again
           boom.destroy();                       // remove explosion sprite
         });
+
         //score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
+
+        // Add extra time to the game clock
+          // Check if extra time has been added for this explosion
+          if (!this.extraTimeAdded) {
+          // Add extra time to the game clock using delayedCall
+            this.time.delayedCall(extraTime * 1000, () => {
+          }, [], this);
+
+          // Set the flag to indicate that extra time has been added
+          this.extraTimeAdded = true;
+ }
 
         this.sound.play('sfx_explosion');
         }

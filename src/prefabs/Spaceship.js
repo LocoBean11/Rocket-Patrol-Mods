@@ -5,6 +5,7 @@ class Spaceship extends Phaser.GameObjects.Sprite {
       scene.add.existing(this);
       this.points = pointValue;
       this.moveSpeed = game.settings.spaceshipSpeed; //pixels per frame
+      this.fasterMoveSpeed = game.settings.spaceshipSpeed; //ships move faster after 30 seconds
     }
 
     update() {
@@ -18,7 +19,7 @@ class Spaceship extends Phaser.GameObjects.Sprite {
 
     increaseSpeed(amount) {
         // Increase the speed by the specified amount
-        this.speed += amount;
+        this.moveSpeed += amount;
     }
 
     //position reset
@@ -26,12 +27,3 @@ class Spaceship extends Phaser.GameObjects.Sprite {
         this.x = game.config.width;
     }
 }
-
-  // Speed increase after 30 seconds
-      /*this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-        this.moveSpeed = game.settings.spaceshipSpeed*2;
-          this.ship01 = true;
-          this.ship02 = true;
-          this.ship03 = true;
-      }, null, this);
-    }*/

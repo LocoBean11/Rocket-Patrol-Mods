@@ -1,3 +1,7 @@
+//Aaron Rodriguez
+// Rocket Patrol 2: Electric Boogaloo
+//Approximate time: 5 hours
+//Mods chosen: Fire UI (1 pt), 
 let config = {
     type: Phaser.CANVAS,
     width: 640,
