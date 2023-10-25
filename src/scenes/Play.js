@@ -11,6 +11,8 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/starfield.png');
         //load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        //BGM
+        this.load.audio('chiptunemusic', './assets/chiptunemusic.mp3');
     }
 
     create() {
@@ -30,6 +32,9 @@ class Play extends Phaser.Scene {
           }
       );
       */
+      //Looping BGM
+      this.backgroundMusic = this.sound.add('chiptunemusic'); // 'backgroundMusic' should be the key for your music asset
+      this.backgroundMusic.play({ loop: true });
 
       this.extraTime = 5;
 
