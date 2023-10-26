@@ -13,10 +13,15 @@
             this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
             //BGM
             this.load.audio('chiptunemusic', './assets/chiptunemusic.mp3');
+            this.load.audio('Explosion 1', './assets/Explosion 1.wav');
+            this.load.audio('Explosion 2', './assets/Explosion 2.wav');
+            this.load.audio('Explosion 3', './assets/Explosion 3.wav');
+            this.load.audio('Explosion 4', './assets/Explosion 4.wav');
         }
 
         create() {
-          
+          this.explosions = ['Explosion 1', 'Explosion 2', 'Explosion 3', 'Explosion 4'];
+
           //Looping BGM
           this.backgroundMusic = this.sound.add('chiptunemusic'); 
           this.backgroundMusic.play({ loop: true });
@@ -41,7 +46,7 @@
             this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
             this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
             this.ship04 = new Spaceship(this, game.config.width, borderUISize*8 + borderPadding*4, 'smallerspaceship', 0, 50).setOrigin(0,0);
-            this.ship04.increaseSpeed(3);
+            this.ship04.increaseSpeed(4);
 
             //define keys
             keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -223,8 +228,9 @@
             this.scoreLeft.text = this.p1Score;
             
             // Add extra time to the game clock for each successful hit
-            this.clock.elapsed -= 5000;
-
-            this.sound.play('sfx_explosion');
+            this.clock.elapsed -= 3000;
+            this.rnd = Phaser.Math.RND;
+            this.sound.play(this.rnd.pick(this.explosions));
+            //this.sound.play('sfx_explosion');
             }
         }

@@ -1,10 +1,11 @@
 //Name: Aaron Rodriguez
 //Rocket Patrol 2: Electric Boogaloo
 //Approximate time: 9 hours
-//Mods chosen: Fire UI (1 pt), looping background music (1 pt), speed increase (1 pt),
-//time remaining (3 pts), new title screen (3 pts), 
+//Mods chosen: Fire UI (1 pt), looping background music (1 pt), speed increase (1 pt)
+//time remaining (3 pts), new title screen (3 pts), randomized explosion sound effects (3 pts) 
 //new enemy spaceship type (5 pts), add time to the clock for each hit (5 pts)
 //CITATION: "Chiptune No Copyright Music | No Copyright | No Attribution - Loopable" by Liborio Conti @ YouTube
+//The randomized explosion sound effect was the last mod and it goes over the 20 point limit, but it was just for fun
 
 let config = {
     type: Phaser.CANVAS,
