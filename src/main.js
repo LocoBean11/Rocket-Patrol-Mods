@@ -1,6 +1,6 @@
 //Name: Aaron Rodriguez
 //Rocket Patrol 2: Electric Boogaloo
-//Approximate time: 8 hours
+//Approximate time: 9 hours
 //Mods chosen: Fire UI (1 pt), looping background music (1 pt), speed increase (1 pt),
 //time remaining (3 pts), new title screen (3 pts), 
 //new enemy spaceship type (5 pts), add time to the clock for each hit (5 pts)
