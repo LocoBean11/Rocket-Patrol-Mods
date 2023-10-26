@@ -3,7 +3,7 @@
 //Approximate time: 8 hours
 //Mods chosen: Fire UI (1 pt), looping background music (1 pt), speed increase (1 pt),
 //time remaining (3 pts), new title screen (3 pts), 
-//new enemy spaceshup type (5), 
+//new enemy spaceship type (5 pts), add time to the clock for each hit (5 pts)
 //CITATION: "Chiptune No Copyright Music | No Copyright | No Attribution - Loopable" by Liborio Conti @ YouTube
 
 let config = {
